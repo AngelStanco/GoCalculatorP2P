@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-// Functions
+// Funciones
 
 // ##################
 // ### Porcentaje ###
