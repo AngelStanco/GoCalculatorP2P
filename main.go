@@ -187,17 +187,16 @@ func main() {
 
 
 	// Conversión de dólares a moneda seleccionada
-	var mntCvs float64 = exg * mnt
+	var mntCvs float64 = Round("", (exg * mnt), 2)
 
 	// Porcentaje total de las Comisiones
 	var pctCms float64 = cms1 + cms2
 
 	// Monto total de las comisiones
-	var mntCms float64 = Round("", Percent(mnt, pctCms), 2) // Dolares
-	var mntCmsCvs float64 = mntCms * exg // Moneda Seleccionada
+	var mntCms float64 = Round("", Percent(mnt, pctCms), 2) * exg
 
 	// Monto de las Comisiones en Decimal
-	var dcmCms float64 = Round("", mntCmsCvs / 100, 4)
+	var dcmCms float64 = Round("", mntCms / mnt, 4)
 
 	// Precios Minimos
 	var priceBuy float64 = Round("floor", (exg - dcmCms), 3)
@@ -208,8 +207,8 @@ func main() {
 	priceSale = InputFloat(fmt.Sprintf("\n\nTu Precio de Venta - (Mínimo %g%s): ", priceSale, symbol))
 
 	// Montos finales
-	var resultSale  float64 = Round("", (priceSale * mnt) - mntCmsCvs, 2)
-	var resultBuy  float64 = Round("", (priceBuy * mnt) + mntCmsCvs, 2)
+	var resultSale  float64 = Round("", (priceSale * mnt) - mntCms, 2)
+	var resultBuy  float64 = Round("", (priceBuy * mnt) + mntCms, 2)
 	var resultFinal float64 = Round("", (mntCvs - resultBuy) + (resultSale - mntCvs), 2)
 
 
@@ -219,9 +218,9 @@ func main() {
 	fmt.Println("\n\n------------ Resultado de las Comisiones ------------")
 
 
-	fmt.Printf("\n\nComisión por cada Transacción: %g%%  ->  Perdida: %g%s", pctCms, Round("", mntCmsCvs, 2), symbol)
+	fmt.Printf("\n\nComisión por cada Transacción: %g%%  ->  Perdida: %g%s", pctCms, Round("", mntCms, 2), symbol)
 
-	fmt.Printf("\n\n\nComisión Total de Compra y Venta: %g%%  ->  Perdida Total: %g%s", (pctCms * 2), Round("", (mntCmsCvs * 2), 2), symbol)
+	fmt.Printf("\n\n\nComisión Total de Compra y Venta: %g%%  ->  Perdida Total: %g%s", (pctCms * 2), Round("", (mntCms * 2), 2), symbol)
 
 
 	fmt.Println("\n\n\n------------ Resultados ------------")
@@ -230,7 +229,7 @@ func main() {
 		fmt.Printf("\n\nConversión de 1$ a %s = %g%s  |  %g$ a %s = %g%s", symbol, exg, symbol, mnt, symbol, mntCvs, symbol)
 	}
 
-	fmt.Printf("\n\nTu Precio de Compra: %g%s  ->  Pagaras: %g%s y Recibirás %g USDT", priceBuy, symbol, resultBuy, symbol, mnt)
+	fmt.Printf("\n\n\nTu Precio de Compra: %g%s  ->  Pagaras: %g%s y Recibirás %g USDT", priceBuy, symbol, resultBuy, symbol, mnt)
 
 	fmt.Printf("\n\n\nTu Precio de Venta: %g%s  ->  Pagaras: %g USDT y Recibirás %g%s", priceSale, symbol, mnt, resultSale, symbol)
 
